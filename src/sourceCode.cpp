@@ -27,6 +27,7 @@ class Building {
 
 	public:
 		Building(string name, int number);
+		Building();
 		string getname();
 		int getnumber();
 };
@@ -36,6 +37,10 @@ Building::Building(string name, int number) {
 	this->number = number;
 }
 
+Building::Building() {
+	
+}
+
 string Building::getname() {
 	return name;
 }
@@ -43,6 +48,32 @@ string Building::getname() {
 int Building::getnumber() {
 	return number;
 }
+
+class Edge {
+	private:
+		Building source;
+		Building dest;
+		int weight;
+
+	public:
+		Edge(Building source, Building dest, int weight);
+		Building getSource();
+		Building getDest();
+		int getWeight();
+
+};
+
+Edge::Edge(Building source, Building dest, int weight) {
+	this->source = source;
+	this->dest = dest;
+	this->weight = weight;
+}
+
+Building Edge::getSource() {return source;}
+
+Building Edge::getDest() {return dest;}
+
+int Edge::getWeight() {return weight;}
 
 class Graph {
 	private:
@@ -55,7 +86,7 @@ class Graph {
 		// Graph specific methods
 		Graph(int numberOfVertices);
 		void AddEdge(Building source, Building destination, int weight);
-		void FindPrimMST(Building startVertex, vector<Building>* buildings);
+		void FindPrimMST(Building startVertex, vector<Building>* buildings, vector<Edge>* edges);
 		
 };
 
@@ -63,7 +94,7 @@ class Graph {
 Graph::Graph(int numberOfVertices) {
   this->numberOfVertices = numberOfVertices;
   adj = new list< pair<Building, int> >[numberOfVertices];
- }
+}
 
 
 // Adds an edge to the graph
@@ -74,7 +105,12 @@ void Graph::AddEdge(Building source, Building destination, int weight) {
 	adj[destination.getnumber()].push_back(make_pair(source, weight));
 }
 
-void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings) {
+bool comp( Edge& lhs,  Edge& rhs)
+{
+	return lhs.getWeight() < rhs.getWeight();
+}
+
+void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vector<Edge>* edges) {
 	priority_queue< pair<int, int>, vector< pair<int, int> >, greater< pair<int, int> > > pq;
 
 	Building src = startvertex;
@@ -171,8 +207,33 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings) {
 	// Print edges of MST using parent array
 	for (int i = 1; i < numberOfVertices; ++i) {
 		int buildingNum = parent[i];
+		string sourceName = buildings->at(buildingNum).getname();
+		string destName = buildings->at(i).getname();
+		int edgeWeight;
+		vector<Edge> sortedEdges;
 		//uzaklığı elde edip printle
-		cout << buildings->at(buildingNum).getname() << " " << buildings->at(i).getname() <<endl;
+		vector<Edge>::iterator edgeIt;
+		for (edgeIt = edges->begin(); edgeIt != edges->end(); ++edgeIt) {
+			Edge currentEdge = (*edgeIt);
+			
+			if (currentEdge.getSource().getname() == sourceName && currentEdge.getDest().getname() == destName) {
+				edgeWeight = currentEdge.getWeight();
+				sortedEdges.push_back(currentEdge);
+			}
+		}
+
+		
+		/*
+		std::sort(sortedEdges.begin(), sortedEdges.end(), comp);
+
+		for (edgeIt = sortedEdges.begin(); edgeIt != sortedEdges.end(); ++edgeIt) {
+			cout << (*edgeIt).getWeight()<<endl;
+
+		}
+		*/
+
+
+		std::cout << sourceName << " " << destName << " " << edgeWeight <<endl;
 		printf("%d - %d\n", buildings->at(buildingNum).getnumber(), i);
 
 	}
@@ -184,7 +245,7 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings) {
 int main() {
 
   string fname;
-  fname = "city_plan_1.txt";
+  fname = "city_plan_2.txt";
   //cin >> fname;
   ifstream city_plan(fname);
 
@@ -195,7 +256,8 @@ int main() {
 
 	int buildingCounter = 0;
 	vector<Building>* buildings = new vector<Building>;
-	Graph g(6);
+	vector<Edge>* edges = new vector<Edge>;
+	Building startVertex; 
 
   while (getline(city_plan, line)) {
     stringstream ss(line);
@@ -203,25 +265,72 @@ int main() {
     getline(ss, dest, ',');
     getline(ss, weight, ',');
 
-/*
+		Building* newBuildingS;
+		Building* newBuildingD;
+
+
 		if(buildingCounter == 0) {
-			Building* newBuildingS = new Building(source, buildingCounter);
-			buildingNames->push_back(*newBuildingS);
+			newBuildingS = new Building(source, buildingCounter);
+			startVertex = *newBuildingS;
+			buildings->push_back(*newBuildingS);
 			buildingCounter++;
-			Building* newBuildingD = new Building(dest, buildingCounter);
-			buildingNames->push_back(*newBuildingD);
+			newBuildingD = new Building(dest, buildingCounter);
+			buildings->push_back(*newBuildingD);
 			buildingCounter++;
 
-			g.AddEdge(*newBuildingS, *newBuildingD, stoi(weight));
+			Edge* newEdge = new Edge(*newBuildingS, *newBuildingD, stoi(weight));
+			edges->push_back(*newEdge);
+			//g.AddEdge(*newBuildingS, *newBuildingD, stoi(weight));
 		} else {
+			vector<Building>::iterator buildIt;
+			bool sourcePresent = false;
+			bool destPresent = false;
+			for (buildIt = buildings->begin(); buildIt != buildings->end(); ++buildIt ) {
+				if ((*buildIt).getname() == source) {
+					sourcePresent = true;
+					*newBuildingS = *buildIt;
+				}
+				if ((*buildIt).getname() == dest) {
+					destPresent = true;
+					*newBuildingD = *buildIt;
+				}
+			}
 
+			if (!sourcePresent){
+				newBuildingS = new Building(source, buildingCounter);
+				buildings->push_back(*newBuildingS);
+				buildingCounter++;
+			}
+			if (!destPresent) {
+				newBuildingD = new Building(dest, buildingCounter);
+				buildings->push_back(*newBuildingD);
+				buildingCounter++;
+			}
+
+			Edge* newEdge = new Edge(*newBuildingS, *newBuildingD, stoi(weight));
+			edges->push_back(*newEdge);
 		}
-*/
 
-    cout << source << " " << dest << " " << weight <<endl;
+
+    std::cout << source << " " << dest << " " << weight <<endl;
   }
 	// Create the graph with the number of vertices that it will contain
+	vector<Building>::iterator it;
+	for (it = buildings->begin(); it != buildings->end(); ++it ) {
+		std::cout << (*it).getname() << endl;
+
+	}
+
+	cout << buildings->size() <<endl;
+	Graph g(buildings->size());
+
+	vector<Edge>::iterator ite;
+	for (ite = edges->begin(); ite != edges->end(); ++ite ) {
+		std::cout << (*ite).getSource().getname() << " " << (*ite).getDest().getname() << " " << (*ite).getWeight() << endl;
+		g.AddEdge((*ite).getSource(), (*ite).getDest(), (*ite).getWeight());
+	}
 	
+	/*
   Building* startVertex = new Building("GP",0);
   Building* hipp = new Building("hipp",1);
   Building* ch1 = new Building("ch1",2);
@@ -246,8 +355,9 @@ int main() {
 	g.AddEdge(*ch1, *hp2, 1);
 	g.AddEdge(*ch2, *hp1, 100);
 	g.AddEdge(*ch2, *hp2, 100);
+	*/
 	// Print all the edges in the graph
-	g.FindPrimMST(*startVertex, buildings);
+	g.FindPrimMST(startVertex, buildings, edges);
 	
 	return 0;
 }
