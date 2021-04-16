@@ -61,6 +61,8 @@
         "string": "cpp",
         "string_view": "cpp",
         "fstream": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "list": "cpp",
+        "map": "cpp"
     }
 }

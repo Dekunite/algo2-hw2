@@ -219,6 +219,11 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 			if (currentEdge.getSource().getname() == sourceName && currentEdge.getDest().getname() == destName) {
 				edgeWeight = currentEdge.getWeight();
 				sortedEdges.push_back(currentEdge);
+				std::cout << sourceName << " " << destName << " " << edgeWeight <<endl;
+			} else if (currentEdge.getSource().getname() == destName && currentEdge.getDest().getname() == sourceName) {
+				edgeWeight = currentEdge.getWeight();
+				sortedEdges.push_back(currentEdge);
+				std::cout << destName << " " << sourceName << " " << edgeWeight <<endl;
 			}
 		}
 
@@ -233,7 +238,7 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 		*/
 
 
-		std::cout << sourceName << " " << destName << " " << edgeWeight <<endl;
+		//std::cout << sourceName << " " << destName << " " << edgeWeight <<endl;
 		printf("%d - %d\n", buildings->at(buildingNum).getnumber(), i);
 
 	}
@@ -245,7 +250,7 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 int main() {
 
   string fname;
-  fname = "city_plan_2.txt";
+  fname = "city_plan_1.txt";
   //cin >> fname;
   ifstream city_plan(fname);
 
