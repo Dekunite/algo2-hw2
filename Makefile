@@ -6,7 +6,7 @@ SRC     := src
 INCLUDE := include
 
 LIBRARIES   :=
-EXECUTABLE  := sourceCode.exe
+EXECUTABLE  := q1.exe
 
 
 all: $(BIN)/$(EXECUTABLE)
