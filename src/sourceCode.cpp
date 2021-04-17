@@ -318,6 +318,11 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 					continue;
 				}
 
+				//important people houses not connected
+				if ((sourceName.compare(0,2,"Hp")==0 && destination.getname().compare(0,2,"Hp")==0) || (sourceName.compare(0,2,"Hp")==0 && destination.getname().compare(0,2,"Hp")==0)) {
+					continue;
+				}
+
 
 				//  If v is not in MST and weight of (u,v) is smaller
 				// than current key of v
