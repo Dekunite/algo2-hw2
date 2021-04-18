@@ -235,8 +235,8 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 	//keep a parent array to indicate which vertex is connected to which vertex
 	//no parent = -1
   vector<int> parent(numberOfVertices, -1);
-	vector<int>::iterator is;
 	/*
+	vector<int>::iterator is;
 	iCounter = 0;
 	for (is = parent.begin(); is != parent.end(); ++is){
 		cout << iCounter << ": " << *is <<endl;
@@ -257,7 +257,6 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 
 	//uzaklık, vertexNum 
 	//push source vertex in to priority queue
-	//initialize source's distance as 0 since it is the starting point
   pq.push(make_pair(0, startvertex.getNumber()));
 	//initialize source's distance as 0 since it is the starting point
   dist[src.getNumber()] = 0;
