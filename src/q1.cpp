@@ -393,6 +393,7 @@ int main() {
 		//if building counter = 0, directly push buildings in to buildings vector.
 		if(buildingCounter == 0) {
 			newBuildingS = new Building(source, buildingCounter);
+			//assign first building to startvertex GP in test cases
 			startVertex = *newBuildingS;
 			buildings->push_back(*newBuildingS);
 			buildingCounter++;
