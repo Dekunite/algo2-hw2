@@ -10,6 +10,7 @@ Date: <20/04/2021>
 #include <vector>
 #include <queue>
 #include <list>
+#include <algorithm>
 
 using namespace std;
 #define INF 0x3f3f3f3f
@@ -261,6 +262,8 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 	//initialize source's distance as 0 since it is the starting point
   dist[src.getNumber()] = 0;
 
+	vector<string> doubleCheck;
+
 	//while priority queue is not empty
   while (!pq.empty()) {
 		//priority queue holds (distance, building number)
@@ -329,11 +332,13 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 
 				//skip Hipp it is already connected to GP
 				if ((destination.getName().compare("Hipp") == 0)) {
+					doubleCheck.push_back(sourceName);
 					continue;
 				}
 
 				//skip the first added church it is already connected to GP
 				if ((destination.getName().compare(addedChurch) == 0)) {
+					doubleCheck.push_back(sourceName);
 					continue;
 				}
 
@@ -350,7 +355,10 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 
 				//check if destination is operated on before using the MST vector.
 				//if the total distance can be reduced  
-				if (MST[destination.getNumber()] == false && dist[destination.getNumber()] > destinationWeight)
+				bool inList = ((find(doubleCheck.begin(), doubleCheck.end(), destination.getName()) != doubleCheck.end()) && sourceName.compare(addedChurch) == 0) ||
+											((find(doubleCheck.begin(), doubleCheck.end(), destination.getName()) != doubleCheck.end()) && sourceName.compare("Hipp") == 0);
+				if ((MST[destination.getNumber()] == false && dist[destination.getNumber()] > destinationWeight) ||
+				 inList && dist[destination.getNumber()] > destinationWeight)
 				{
 					//update/reduce the dist
 					dist[destination.getNumber()] = destinationWeight;
@@ -436,9 +444,9 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 int main() {
 
   string fname;
-  fname = "city_plan_1.txt";
+  //fname = "city_plan_3.txt";
 	//get file name
-  //cin >> fname;
+  cin >> fname;
   ifstream city_plan(fname);
 
   string source;

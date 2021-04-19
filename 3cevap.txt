@@ -1,0 +1,14 @@
+Hipp Ch1 1
+Ch4 Hp1 2
+Hp3 Bas2 3
+Ch2 Bas3 4
+GP Bas4 5
+GP Bas2 6
+Hipp Hp1 7
+GP Hp4 8
+Hipp Hp2 10
+Bas1 Ch2 15
+GP Hipp 20
+GP Ch2 21
+GP Ch3 22
+124
