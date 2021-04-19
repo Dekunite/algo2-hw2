@@ -13,7 +13,7 @@ Date: <20/04/2021>
 #include <algorithm>
 
 using namespace std;
-#define INF 0x3f3f3f3f
+#define INF 0x6FFFFFFF
 
 //Class to hold building names and assigned numbers
 class Building {
@@ -143,16 +143,6 @@ Building firstChurch(list< pair<Building, int> > *adj, vector<bool> MST, vector<
 	{
 		//update/reduce the distance
 		dist->at(cheapestDest.getNumber()) = cheapestWeight;
-		/*
-		vector<int>::iterator it;
-		int iCounter = 0;
-		cout << "-------dist-------" << endl;
-		for (it = dist->begin(); it != dist->end(); ++it){
-			cout << iCounter << ": " << *it <<endl;
-			iCounter++;
-		}
-		*/
-
 	}
 	return cheapestDest;
 }
@@ -187,15 +177,6 @@ Building firstHipp(list< pair<Building, int> > *adj, vector<bool> MST, vector<in
 	{
 		//update/reduce the dist
 		dist->at(cheapestDest.getNumber()) = cheapestWeight;
-		/*
-		vector<int>::iterator it;
-		int iCounter = 0;
-		cout << "-------dist-------" << endl;
-		for (it = dist->begin(); it != dist->end(); ++it){
-			cout << iCounter << ": " << *it <<endl;
-			iCounter++;
-		}
-		*/
 
 	}
 	return cheapestDest;
@@ -224,37 +205,13 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 
 	//keep track of all distances for every vertex, initialize distances as infinite
 	vector<int> dist(numberOfVertices, INF);
-	/*
-	vector<int>::iterator i;
-	int iCounter = 0;
-	for (i = dist.begin(); i != dist.end(); ++i){
-		cout << iCounter << ": " << *i <<endl;
-		iCounter++;
-	}
-	*/
 
 	//keep a parent array to indicate which vertex is connected to which vertex
 	//no parent = -1
   vector<int> parent(numberOfVertices, -1);
-	/*
-	vector<int>::iterator is;
-	iCounter = 0;
-	for (is = parent.begin(); is != parent.end(); ++is){
-		cout << iCounter << ": " << *is <<endl;
-		iCounter++;
-	}
-	*/
 
 	//keep track of vertices which are operated on, no need to operate twice
   vector<bool> MST(numberOfVertices, false);
-	/*
-	vector<bool>::iterator id;
-	iCounter = 0;
-	for (id = MST.begin(); id != MST.end(); ++id){
-		cout << iCounter << ": " << *id <<endl;
-		iCounter++;
-	}
-	*/
 
 	//uzaklık, vertexNum 
 	//push source vertex in to priority queue
@@ -277,14 +234,6 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 
 		//mark the source as operated on
 		MST[sourceNumber] = true;
-		/*
-		int iCounter = 0;
-		cout << "-------MST-------" << endl;
-		for (id = MST.begin(); id != MST.end(); ++id){
-		cout << iCounter << ": " << *id <<endl;
-		iCounter++;
-		}
-		*/
 
 		//first connection rule bw GP and church
 		if (!firstConnectionChurch) {
@@ -293,14 +242,7 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 
 			pq.push(make_pair(dist[destination.getNumber()], destination.getNumber()));
 			parent[destination.getNumber()] = sourceNumber;
-			/*
-			iCounter = 0;
-			cout << "-------parent-------" << endl;
-			for (is = parent.begin(); is != parent.end(); ++is){
-				cout << iCounter << ": " << *is <<endl;
-				iCounter++;
-			}
-			*/
+
 			firstConnectionChurch = true;
 		}
 
@@ -310,14 +252,7 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 
 			pq.push(make_pair(dist[destination.getNumber()], destination.getNumber()));
 			parent[destination.getNumber()] = sourceNumber;
-			/*
-			iCounter = 0;
-			cout << "-------parent-------" << endl;
-			for (is = parent.begin(); is != parent.end(); ++is){
-				cout << iCounter << ": " << *is <<endl;
-				iCounter++;
-			}
-			*/
+
 			firstConnectionHipp = true;
 		}
 
@@ -362,28 +297,11 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 				{
 					//update/reduce the dist
 					dist[destination.getNumber()] = destinationWeight;
-					/*
-					vector<int>::iterator it;
-					int iCounter = 0;
-					cout << "-------dist-------" << endl;
-					for (it = dist.begin(); it != dist.end(); ++it){
-						cout << iCounter << ": " << *it <<endl;
-						iCounter++;
-					}
-					*/
 
 					//push the pair consisting of (new distance for destination, destination)
 					pq.push(make_pair(dist[destination.getNumber()], destination.getNumber()));
 					//assign source as parent to destination / connect destination and source
 					parent[destination.getNumber()] = sourceNumber;
-					/*
-					iCounter = 0;
-					cout << "-------parent-------" << endl;
-					for (is = parent.begin(); is != parent.end(); ++is){
-						cout << iCounter << ": " << *is <<endl;
-						iCounter++;
-					}
-					*/
 				}
 		}
 
@@ -444,7 +362,7 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 int main() {
 
   string fname;
-  //fname = "city_plan_3.txt";
+  //fname = "city_plan_1.txt";
 	//get file name
   cin >> fname;
   ifstream city_plan(fname);
@@ -521,13 +439,6 @@ int main() {
 		}
   }
 
-	/*
-	vector<Building>::iterator it;
-	for (it = buildings->begin(); it != buildings->end(); ++it ) {
-		std::cout << (*it).getName() << endl;
-
-	}
-	*/
 	//initialize the graph with number of vertices equal to buidings size
 	Graph g(buildings->size());
 
@@ -538,34 +449,6 @@ int main() {
 		g.AddEdge((*ite).getSource(), (*ite).getDest(), (*ite).getWeight());
 	}
 	
-	
-	/*
-  Building* startVertex = new Building("GP",0);
-  Building* hipp = new Building("hipp",1);
-  Building* ch1 = new Building("ch1",2);
-  Building* ch2 = new Building("ch2",3);
-  Building* hp1 = new Building("hp1",4);
-  Building* hp2 = new Building("hp2",5);
-
-	buildings->push_back(*startVertex);
-	buildings->push_back(*hipp);
-	buildings->push_back(*ch1);
-	buildings->push_back(*ch2);
-	buildings->push_back(*hp1);
-	buildings->push_back(*hp2);
-  //Building* startVertex = new Building("GP",0);
-  //Building* startVertex = new Building("GP",0);
-	// Add all of the edges to the graph
-	g.AddEdge(*startVertex,*hipp, 1);
-	g.AddEdge(*startVertex, *ch1, 9);
-	g.AddEdge(*startVertex, *ch2, 10);
-	g.AddEdge(*startVertex, *hp1, 1);
-	g.AddEdge(*ch1, *hp1, 1);
-	g.AddEdge(*ch1, *hp2, 1);
-	g.AddEdge(*ch2, *hp1, 100);
-	g.AddEdge(*ch2, *hp2, 100);
-	*/
-
 	//find MST with prim's algorithm and print the result
 	g.FindPrimMST(startVertex, buildings, edges);
 	
