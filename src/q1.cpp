@@ -358,7 +358,7 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 				//check if destination is operated on before using the MST vector.
 				//if the total distance can be reduced  
 				if ((MST[destination.getNumber()] == false && dist[destination.getNumber()] > destinationWeight) ||
-				 inList && dist[destination.getNumber()] > destinationWeight)
+				 (inList && dist[destination.getNumber()] > destinationWeight))
 				{
 					//update/reduce the dist
 					dist[destination.getNumber()] = destinationWeight;
