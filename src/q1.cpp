@@ -352,11 +352,11 @@ void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vecto
 					continue;
 				}
 
-
-				//check if destination is operated on before using the MST vector.
-				//if the total distance can be reduced  
+				//since we dont change the parent of Hipp and FirstChurch be sure to check them as the parent node while traversing
 				bool inList = ((find(doubleCheck.begin(), doubleCheck.end(), destination.getName()) != doubleCheck.end()) && sourceName.compare(addedChurch) == 0) ||
 											((find(doubleCheck.begin(), doubleCheck.end(), destination.getName()) != doubleCheck.end()) && sourceName.compare("Hipp") == 0);
+				//check if destination is operated on before using the MST vector.
+				//if the total distance can be reduced  
 				if ((MST[destination.getNumber()] == false && dist[destination.getNumber()] > destinationWeight) ||
 				 inList && dist[destination.getNumber()] > destinationWeight)
 				{
